@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>edutext-UNJ - Dokumentasi</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
     :root {
       color-scheme: light;
       --bg: #f8fafc;
@@ -123,10 +124,17 @@
   </main>
 
   <script>
-    const readmeUrl = "README.md";
-    const jsonFiles = [
-      { label: "Contoh data (data/example.json)", path: "data/example.json" }
-    ];
+    const CONFIG = {
+      readmeCandidates: ["README.md", "readme.md"],
+      jsonFiles: [{ label: "Contoh data (data/example.json)", path: "data/example.json" }],
+      jsonListPath: "data/files.json"
+    };
+    let jsonFiles = [...CONFIG.jsonFiles];
+    const JSON_MIME_TYPES = ["application/json", "application/ld+json", "text/json"];
+
+    function formatStatus(res) {
+      return `${res.status || ""} ${res.statusText || ""}`.trim() || "Permintaan gagal";
+    }
 
     function updateBadge(id, text) {
       const badge = document.getElementById(id);
@@ -135,16 +143,23 @@
 
     async function loadReadme() {
       updateBadge("readme-status", "Memuat...");
-      try {
-        const res = await fetch(readmeUrl);
-        if (!res.ok) throw new Error(res.statusText);
-        const text = await res.text();
-        document.getElementById("readme-content").textContent = text.trim() || "README kosong.";
-        updateBadge("readme-status", "Selesai");
-      } catch (err) {
-        document.getElementById("readme-content").textContent = "Gagal memuat README: " + err.message;
-        updateBadge("readme-status", "Gagal");
+      for (const path of CONFIG.readmeCandidates) {
+        try {
+          const res = await fetch(path);
+          if (!res.ok) {
+            throw new Error(formatStatus(res));
+          }
+          const text = await res.text();
+          document.getElementById("readme-content").textContent = text.trim() || "README kosong.";
+          updateBadge("readme-status", "Selesai");
+          return;
+        } catch (error) {
+          console.error("Gagal memuat README:", path, error);
+          continue;
+        }
       }
+      document.getElementById("readme-content").textContent = "Gagal memuat README: berkas tidak ditemukan.";
+      updateBadge("readme-status", "Gagal");
     }
 
     function populateJsonSelect() {
@@ -156,6 +171,7 @@
         opt.disabled = true;
         opt.selected = true;
         select.append(opt);
+        syncLoadButton(true);
         return;
       }
       jsonFiles.forEach((item) => {
@@ -164,13 +180,36 @@
         opt.textContent = item.label;
         select.append(opt);
       });
+      syncLoadButton();
+    }
+
+    async function refreshJsonList() {
+      try {
+        const res = await fetch(CONFIG.jsonListPath);
+        if (!res.ok) throw new Error(formatStatus(res));
+        const data = await res.json();
+        if (Array.isArray(data) && data.length) {
+          const validItems = data.filter(
+            (item) => item && typeof item.label === "string" && typeof item.path === "string"
+          );
+          if (validItems.length) {
+            jsonFiles = validItems;
+          }
+        }
+      } catch (error) {
+        console.error("Gagal memuat daftar JSON:", error);
+      } finally {
+        populateJsonSelect();
+      }
     }
 
     async function loadJson(path) {
       updateBadge("json-status", "Memuat...");
       try {
         const res = await fetch(path);
-        if (!res.ok) throw new Error(res.statusText);
+        if (!res.ok) {
+          throw new Error(formatStatus(res));
+        }
         const data = await res.json();
         document.getElementById("json-output").textContent = JSON.stringify(data, null, 2);
         updateBadge("json-status", "Selesai");
@@ -181,15 +220,21 @@
     }
 
     function handleUpload(event) {
-      const file = event.target.files?.[0];
+      const file = event.target.files[0];
       if (!file) return;
+      const lowerName = file.name.toLowerCase();
+      const isJsonFile = lowerName.endsWith(".json") || JSON_MIME_TYPES.includes(file.type);
       updateBadge("json-status", "Membaca unggahan...");
       const reader = new FileReader();
       reader.onload = () => {
         try {
           const parsed = JSON.parse(reader.result);
-          document.getElementById("json-output").textContent = JSON.stringify(parsed, null, 2);
-          updateBadge("json-status", "Unggahan dimuat");
+          let output = JSON.stringify(parsed, null, 2);
+          if (!isJsonFile) {
+            output += "\n\n(Peringatan: MIME/ekstensi tidak menunjukkan JSON, tetapi konten valid JSON.)";
+          }
+          document.getElementById("json-output").textContent = output;
+          updateBadge("json-status", isJsonFile ? "Unggahan dimuat" : "Konten JSON terdeteksi");
         } catch (err) {
           document.getElementById("json-output").textContent = "Berkas bukan JSON valid: " + err.message;
           updateBadge("json-status", "Gagal");
@@ -202,15 +247,27 @@
       reader.readAsText(file);
     }
 
+    function syncLoadButton(forceDisabled = false) {
+      const select = document.getElementById("json-select");
+      const button = document.getElementById("load-json");
+      button.disabled = forceDisabled || !select.value;
+    }
+
+    document.getElementById("json-select").addEventListener("change", syncLoadButton);
+
     document.getElementById("load-json").addEventListener("click", () => {
       const select = document.getElementById("json-select");
       const path = select.value;
-      if (path) loadJson(path);
+      if (path) {
+        loadJson(path);
+      } else {
+        updateBadge("json-status", "Pilih berkas terlebih dahulu");
+      }
     });
 
     document.getElementById("json-upload").addEventListener("change", handleUpload);
 
-    populateJsonSelect();
+    refreshJsonList();
     loadReadme();
   </script>
 </body>

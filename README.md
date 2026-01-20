@@ -4,7 +4,7 @@ Halaman web statis sederhana untuk menampilkan konten `README.md` dan berkas JSO
 
 ## Menjalankan
 
-Gunakan server statis lokal agar permintaan `fetch` ke berkas berjalan mulus.
+Gunakan server statis lokal agar permintaan `fetch` ke berkas bekerja mulus.
 
 ```bash
 python -m http.server 8000
