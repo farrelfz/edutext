@@ -1,0 +1,11 @@
+{
+  "project": "edutext-UNJ",
+  "description": "Contoh berkas JSON untuk ditampilkan di halaman web.",
+  "maintainer": "Tim edutext-UNJ",
+  "lastUpdated": "2026-01-20",
+  "items": [
+    { "title": "Materi A", "category": "Bahasa", "difficulty": "Mudah" },
+    { "title": "Materi B", "category": "Sains", "difficulty": "Menengah" },
+    { "title": "Materi C", "category": "Teknologi", "difficulty": "Lanjut" }
+  ]
+}

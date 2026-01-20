@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>edutext-UNJ - Dokumentasi</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #0ea5e9;
+      --border: #e2e8f0;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #fff;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 8px; font-size: 28px; }
+    header p { margin: 0; color: rgba(255,255,255,0.9); }
+    main {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px 48px;
+      display: grid;
+      gap: 16px;
+    }
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+    section h2 { margin-top: 0; }
+    #readme-content, #json-output {
+      background: #0b172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      white-space: pre-wrap;
+      border: 1px solid #1e293b;
+      min-height: 160px;
+    }
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    select, button, input[type="file"] {
+      font: inherit;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.05s ease, box-shadow 0.1s ease;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 10px 18px rgba(14,165,233,0.2); }
+    button:active { transform: translateY(0); box-shadow: none; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #e0f2fe;
+      color: #075985;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>edutext-UNJ</h1>
+    <p>Penampil cepat untuk README dan berkas JSON yang tersedia di repositori.</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="readme-title">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between;flex-wrap:wrap;">
+        <h2 id="readme-title" style="margin:0;">README</h2>
+        <span class="badge" id="readme-status">Memuat...</span>
+      </div>
+      <p class="muted">Konten README ditampilkan langsung dari berkas <code>README.md</code>.</p>
+      <div id="readme-content" aria-live="polite">Memuat README...</div>
+    </section>
+
+    <section aria-labelledby="json-title">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between;flex-wrap:wrap;">
+        <h2 id="json-title" style="margin:0;">Berkas JSON</h2>
+        <span class="badge" id="json-status">Menunggu pilihan</span>
+      </div>
+      <p class="muted">Pilih berkas JSON di repositori atau unggah berkas JSON dari perangkat Anda.</p>
+      <div class="control-row">
+        <select id="json-select" aria-label="Pilih berkas JSON"></select>
+        <button type="button" id="load-json">Muat berkas</button>
+        <input type="file" id="json-upload" accept="application/json" aria-label="Unggah berkas JSON">
+      </div>
+      <div id="json-output" aria-live="polite">Belum ada berkas JSON yang dimuat.</div>
+    </section>
+  </main>
+
+  <script>
+    const readmeUrl = "README.md";
+    const jsonFiles = [
+      { label: "Contoh data (data/example.json)", path: "data/example.json" }
+    ];
+
+    function updateBadge(id, text) {
+      const badge = document.getElementById(id);
+      if (badge) badge.textContent = text;
+    }
+
+    async function loadReadme() {
+      updateBadge("readme-status", "Memuat...");
+      try {
+        const res = await fetch(readmeUrl);
+        if (!res.ok) throw new Error(res.statusText);
+        const text = await res.text();
+        document.getElementById("readme-content").textContent = text.trim() || "README kosong.";
+        updateBadge("readme-status", "Selesai");
+      } catch (err) {
+        document.getElementById("readme-content").textContent = "Gagal memuat README: " + err.message;
+        updateBadge("readme-status", "Gagal");
+      }
+    }
+
+    function populateJsonSelect() {
+      const select = document.getElementById("json-select");
+      select.innerHTML = "";
+      if (jsonFiles.length === 0) {
+        const opt = document.createElement("option");
+        opt.textContent = "Tidak ada berkas JSON di repositori";
+        opt.disabled = true;
+        opt.selected = true;
+        select.append(opt);
+        return;
+      }
+      jsonFiles.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.path;
+        opt.textContent = item.label;
+        select.append(opt);
+      });
+    }
+
+    async function loadJson(path) {
+      updateBadge("json-status", "Memuat...");
+      try {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(res.statusText);
+        const data = await res.json();
+        document.getElementById("json-output").textContent = JSON.stringify(data, null, 2);
+        updateBadge("json-status", "Selesai");
+      } catch (err) {
+        document.getElementById("json-output").textContent = "Gagal memuat berkas: " + err.message;
+        updateBadge("json-status", "Gagal");
+      }
+    }
+
+    function handleUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      updateBadge("json-status", "Membaca unggahan...");
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          document.getElementById("json-output").textContent = JSON.stringify(parsed, null, 2);
+          updateBadge("json-status", "Unggahan dimuat");
+        } catch (err) {
+          document.getElementById("json-output").textContent = "Berkas bukan JSON valid: " + err.message;
+          updateBadge("json-status", "Gagal");
+        }
+      };
+      reader.onerror = () => {
+        document.getElementById("json-output").textContent = "Gagal membaca berkas.";
+        updateBadge("json-status", "Gagal");
+      };
+      reader.readAsText(file);
+    }
+
+    document.getElementById("load-json").addEventListener("click", () => {
+      const select = document.getElementById("json-select");
+      const path = select.value;
+      if (path) loadJson(path);
+    });
+
+    document.getElementById("json-upload").addEventListener("change", handleUpload);
+
+    populateJsonSelect();
+    loadReadme();
+  </script>
+</body>
+</html>
