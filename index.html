@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduText – AI‑Assisted Learning Tools</title>
+    <!-- Primary styles -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- Google Sign‑In script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Application logic -->
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="container header__inner">
+        <div class="logo">
+          <img src="img/logo.png" alt="EduText logo" />
+        </div>
+        <nav class="nav">
+          <a href="#why">Why EduText</a>
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <h1>AI‑assisted pedagogical tools for <span class="highlight">Mindful</span>, <span class="highlight">Meaningful</span> &amp; <span class="highlight">Joyful</span> learning</h1>
+          <p>
+            Empower teachers and schools with ready‑made modules, reflective prompts and deep
+            learning resources developed with AI. Built using research from
+            <strong>EduText‑UNJ</strong>.
+          </p>
+          <a class="btn btn--primary" href="#start">Get Started</a>
+        </div>
+        <div class="hero__image">
+          <img src="https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Illustration of AI‑powered education" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Why EduText Section -->
+    <section id="why" class="why">
+      <div class="container">
+        <h2>Why EduText?</h2>
+        <div class="why__grid">
+          <div class="why__card">
+            <div class="why__icon">🧠</div>
+            <h3>Mindful</h3>
+            <p>Our tools encourage reflective thinking so that students understand concepts deeply, not just memorize facts.</p>
+          </div>
+          <div class="why__card">
+            <div class="why__icon">🎯</div>
+            <h3>Meaningful</h3>
+            <p>Generate content that connects lessons to real‑world contexts, making learning relevant and impactful.</p>
+          </div>
+          <div class="why__card">
+            <div class="why__icon">😊</div>
+            <h3>Joyful</h3>
+            <p>Create engaging experiences that spark curiosity and joy in the classroom through interactive prompts and narratives.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="start" class="login">
+      <div class="container login__inner">
+        <h2>Login to continue</h2>
+        <p>Use your Google account to access the EduText dashboard.</p>
+        <!-- The Google Sign‑in button will render here -->
+        <div id="g_id_onload"
+             data-client_id="YOUR_GOOGLE_CLIENT_ID"
+             data-login_uri=""
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+        <p class="note">* We only use your email to authenticate you.</p>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="container">
+        <h2>Core Features</h2>
+        <div class="features__grid">
+          <div class="card">
+            <h3><span class="feature-emoji">📘</span> Apersepsi &amp; Contextual Problems</h3>
+            <p>Generate engaging introductions and contextual problems to spark curiosity in your students.</p>
+          </div>
+          <div class="card">
+            <h3><span class="feature-emoji">📝</span> LKPD &amp; Lesson Plans</h3>
+            <p>Create lesson plans and worksheets aligned with Deep Learning pedagogy quickly and accurately.</p>
+          </div>
+          <div class="card">
+            <h3><span class="feature-emoji">💭</span> Reflective Questions</h3>
+            <p>Provide mindful reflection prompts to reinforce meaningful understanding and personal growth.</p>
+          </div>
+          <div class="card">
+            <h3><span class="feature-emoji">✅</span> Assessment &amp; Rubrics</h3>
+            <p>Design assessments and rubrics that support mastery and joyful learning experiences.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section id="pricing" class="payment">
+      <div class="container">
+        <h2>Plans &amp; Payments</h2>
+        <p>Choose your quota package and pay using your preferred local methods:</p>
+
+        <!-- Pricing plan -->
+        <div class="pricing">
+          <div class="pricing__card">
+            <h3>Kuota 10 Download</h3>
+            <p class="price">Rp300.000</p>
+            <ul>
+              <li>10 Modul PDF siap pakai</li>
+              <li>Akses dashboard personal</li>
+              <li>Dukungan AI personalised</li>
+            </ul>
+            <button class="btn btn--secondary" onclick="initiatePayment()">Beli Sekarang</button>
+          </div>
+        </div>
+
+        <h3 style="margin-top:3rem">Metode Pembayaran</h3>
+        <div class="payment__methods">
+          <div class="payment__method">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ovo_%28platform%29_logo.svg/256px-Ovo_%28platform%29_logo.svg.png" alt="OVO" />
+            <span>OVO</span>
+          </div>
+          <div class="payment__method">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Dana_Logo.svg/256px-Dana_Logo.svg.png" alt="DANA" />
+            <span>DANA</span>
+          </div>
+          <div class="payment__method">
+            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/a/a1/Logo_GoPay.svg/256px-Logo_GoPay.svg.png" alt="GoPay" />
+            <span>GoPay</span>
+          </div>
+          <div class="payment__method">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/18/BCA_logo.svg/256px-BCA_logo.svg.png" alt="Bank Transfer" />
+            <span>Bank Transfer</span>
+          </div>
+        </div>
+        <p class="note">* Payment integration uses secure local gateways (e.g. Midtrans, DOKU).</p>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+      <div class="container">
+        <h2>Contact Us</h2>
+        <p>Have questions or want to collaborate? Reach out anytime.</p>
+        <ul>
+          <li>Email: <a href="mailto:info@edutext.id">info@edutext.id</a></li>
+          <li>WhatsApp: <a href="https://wa.me/6281234567890" target="_blank">+62 812 3456 7890</a></li>
+          <li>Instagram: <a href="https://instagram.com/edutext.id" target="_blank">@edutext.id</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p>&copy; 2026 EduText. All rights reserved.</p>
+        <nav class="footer__nav">
+          <a href="#">Home</a>
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

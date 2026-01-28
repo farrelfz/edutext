@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduText Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="dashboard.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header__inner">
+        <div class="logo">
+          <img src="img/logo.png" alt="EduText logo" />
+        </div>
+        <nav class="nav">
+          <a href="index.html">Home</a>
+          <a href="#">Dashboard</a>
+          <a href="index.html#pricing">Buy Quota</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="dashboard">
+      <div class="container">
+        <h1>Welcome to your Dashboard</h1>
+        <p class="dashboard__subtitle">Manage your modules, check your remaining quota, and generate new PDF modules.</p>
+
+        <!-- Quota display -->
+        <div class="quota">
+          <div class="quota__info">
+            <span class="quota__remaining" id="quotaRemaining">10</span>
+            <span>downloads remaining</span>
+          </div>
+          <button class="btn btn--secondary" onclick="purchaseQuota()">Beli Kuota Baru</button>
+        </div>
+
+        <!-- Generate Module -->
+        <div class="generate">
+          <h2>Generate Modul PDF</h2>
+          <p>Pilih mata pelajaran dan topik untuk menghasilkan modul baru.</p>
+          <form id="generateForm" onsubmit="generateModule(event)">
+            <div class="form-group">
+              <label for="subject">Mata Pelajaran</label>
+              <select id="subject" name="subject" required>
+                <option value="">-- Pilih --</option>
+                <option value="Fisika">Fisika</option>
+                <option value="Matematika">Matematika</option>
+                <option value="Kimia">Kimia</option>
+                <option value="Biologi">Biologi</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="topic">Topik</label>
+              <input type="text" id="topic" name="topic" placeholder="Contoh: Hukum Newton" required />
+            </div>
+            <button type="submit" class="btn btn--primary">Generate Module</button>
+          </form>
+        </div>
+
+        <!-- List of modules -->
+        <div class="modules">
+          <h2>Modul Anda</h2>
+          <table class="modules__table">
+            <thead>
+              <tr>
+                <th>Nama Modul</th>
+                <th>Tanggal Dibuat</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody id="modulesList">
+              <!-- Modules will be appended here dynamically -->
+            </tbody>
+          </table>
+          <p id="noModulesMessage">Anda belum menghasilkan modul apa pun.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p>&copy; 2026 EduText. All rights reserved.</p>
+        <nav class="footer__nav">
+          <a href="index.html">Home</a>
+          <a href="index.html#features">Features</a>
+          <a href="index.html#pricing">Pricing</a>
+          <a href="index.html#contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
